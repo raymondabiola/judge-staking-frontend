@@ -5,3 +5,21 @@
 html {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+@layer base {
+  .dark p {
+    color: #a0fffb;
+  }
+
+  .dark h2 {
+    color: white;
+  }
+
+  .dark h3 {
+    color: gold;
+  }
+
+  .darkToggleButton {
+    color: #a0fffb;
+  }
+}

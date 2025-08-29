@@ -1,7 +1,7 @@
 import { ThemeToggleButton } from "./components/ThemeToggleButton.tsx";
 import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
-import { TokenInfo } from "./components/TokenInfo.tsx";
+import { Dashboard } from "./components/Dashboard.tsx";
 
 function App() {
   const { address, isConnected } = useAccount();
@@ -9,9 +9,9 @@ function App() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
-        <header className="flex justify-between items-center p-4 bg-gradient-to-r from-purple-800 to-yellow-400 text-white shadow-md">
-          <h1 className="text-3xl font-bold">⚖️ JudgeStaking</h1>
+      <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-b dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors duration-300">
+        <header className="flex justify-between items-center pt-4 pb-4 pl-4 pr-9 bg-gradient-to-r from-purple-800 to-yellow-400 dark:bg-gradient-to-b dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors duration-300 text-white shadow-md border border-gray-200 dark:border-white/20">
+          <h1 className="text-3xl font-bold ml-5">⚖️ JudgeStaking</h1>
           <div className="flex justify-between items-center p-3">
             <ThemeToggleButton />
             <ConnectButton />
@@ -20,7 +20,7 @@ function App() {
 
         <main className="p-6 space-y-6 items-center font-bold text-gray-900 dark:text-gray-800">
           <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white justify-center dark:bg-gray-900 rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10">
+            <div className="bg-white dark:bg-gray-900/95 rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10">
               <h2 className="flex justify-center item-center text-center text-2xl font-bold mt-20 mb-4 bg-gradient-to-r from-purple-700 to-amber-500 bg-clip-text text-transparent">
                 {isConnected
                   ? "Stake JUDGE to Earn JUDGE"
@@ -49,42 +49,7 @@ function App() {
                 DASHBOARD
               </h2>
               <div className="rounded-2xl bg-purple-200 p-6 border-none">
-                <TokenInfo />
-              </div>
-            </div>
-          </section>
-
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white justify-center dark:bg-gray-900 rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10">
-              <h2 className="flex justify-center item-center text-center text-2xl font-bold mt-20 mb-4 bg-gradient-to-r from-purple-700 to-amber-500 bg-clip-text text-transparent">
-                {isConnected
-                  ? "Stake JUDGE to Earn JUDGE"
-                  : "Connect Wallet To Begin"}
-              </h2>
-              <div className="rounded-2xl bg-purple-200 p-6 border-none">
-                <button
-                  className="flex justify-center px-6 py-3 rounded-2xl m-5 font-semibold bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-500 hover:to-amber-400 text-white mx-auto"
-                  onClick={() => {
-                    if (!isConnected) {
-                      openConnectModal?.();
-                    } else {
-                      alert(
-                        "Deposit JUDGE(We will wire this to the contract soon)"
-                      );
-                    }
-                  }}
-                >
-                  {isConnected ? "Deposit JUDGE" : "Connect Wallet"}
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10">
-              <h2 className="flex justify-center item-start text-2xl font-bold mb-4 bg-gradient-to-r from-purple-700 to-amber-500 bg-clip-text text-transparent">
-                DASHBOARD
-              </h2>
-              <div className="rounded-2xl bg-purple-200 p-6 border-none">
-                <TokenInfo />
+                <Dashboard />
               </div>
             </div>
           </section>

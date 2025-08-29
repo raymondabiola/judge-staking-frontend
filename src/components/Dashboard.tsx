@@ -4,7 +4,7 @@ import JudgeTokenABI from "../abi/JudgeToken.json";
 
 const judgeTokenAddress = "0x167043A312D6C3B8c4B5b741225173E65ff45D9a";
 
-export function TokenInfo() {
+export function Dashboard() {
   const { address } = useAccount();
 
   const { data: name } = useReadContract({
@@ -42,24 +42,24 @@ export function TokenInfo() {
       <div
         className="flex-1 rounded-2xl shadow-md p-6 
                   bg-white dark:bg-gray-900 
-                  flex flex-col items-center justify-center text-center text-gray-900 dark:text-gray-100"
+                  flex flex-col items-center justify-center text-center"
       >
         <h2 className="text-2xl font-bold mb-4">Token Info</h2>
         <p className="mb-0.5">Name: {name?.toString() || "Loading..."}</p>
         <p className="mb-0.5">Symbol: {symbol?.toString() || "Loading..."}</p>
         <p>Decimals: {decimals?.toString() || "Loading..."}</p>
       </div>
-      <div
-        className="flex-[0.5] rounded-2xl shadow-md p-6 
+      {address && (
+        <div
+          className="flex-[0.5] rounded-2xl shadow-md p-6 
                   bg-gradient-to-r from-purple-700 to-amber-500 
                   flex flex-col items-center justify-center text-center text-white"
-      >
-        {address && (
+        >
           <p>
             My Wallet Balance: {formattedBal} {symbol?.toString() || ""}
           </p>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
