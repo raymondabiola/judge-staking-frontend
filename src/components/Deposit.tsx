@@ -6,7 +6,7 @@ export function Deposit() {
   const { openConnectModal } = useConnectModal();
 
   return (
-    <div className="bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:bg-gradient-to-r dark:from-gray-950 dark:via-gray-800 dark:to-gray-800 rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10">
+    <div className="col-span-1 md:col-span-2bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:bg-gradient-to-r dark:from-gray-950 dark:via-gray-800 dark:to-gray-800 rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10">
       <h2 className="flex justify-center item-center text-center text-2xl font-bold mt-20 mb-4 bg-gradient-to-r from-purple-700 to-amber-500 bg-clip-text text-transparent">
         {isConnected ? "Stake JUDGE to Earn JUDGE" : "Connect Wallet To Begin"}
       </h2>
