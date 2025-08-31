@@ -25,17 +25,17 @@ export function Dashboard() {
   });
 
   return (
-    <div className="flex flex-col gap-6 h-full">
+    <div className="flex flex-col gap-6 h-full py-10 my-6">
       <div
-        className="flex flex-row rounded-2xl shadow-md pt-6 pb-6 px-8 
-             bg-white dark:bg-gradient-to-l dark:from-gray-950 dark:via-gray-800 dark:to-gray-800
+        className="flex flex-row rounded-2xl shadow-md pt-6 pb-6 px-2 
+             bg-cyan-700 dark:bg-gradient-to-l dark:from-gray-950 dark:via-gray-800 dark:to-gray-800
              text-center divide-x divide-dotted divide-gray-400"
       >
         <div className="flex-1 flex justify-center items-center">
-          <h3 className="text-gray-800">My Wallet Balance: </h3>
+          <h3 className="text-white uppercase">My Wallet Balance</h3>
         </div>
         <div className="flex-1 flex justify-center items-center">
-          <p>
+          <p className="text-yellow-400">
             {balance != null && decimals != null
               ? `${Number(
                   formatUnits(balance as bigint, Number(decimals))

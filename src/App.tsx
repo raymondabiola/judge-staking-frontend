@@ -14,13 +14,20 @@ function App() {
 
         <main className="flex-grow p-6 space-y-6 items-center font-bold text-gray-900 dark:text-gray-800">
           {address ? (
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
               <Deposit />
-              <div className="bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:bg-gradient-to-l dark:from-gray-950 dark:via-gray-800 dark:to-gray-800 rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10">
-                <h2 className="flex justify-center item-start text-2xl font-bold mb-4 bg-gradient-to-r from-purple-700 to-amber-500 bg-clip-text text-transparent">
+              <div
+                className="bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 
+                  dark:bg-gradient-to-l dark:from-gray-950 dark:via-gray-800 dark:to-gray-800 
+                  rounded-2xl pl-6 pr-6 shadow-md border border-gray-200 dark:border-white/10"
+              >
+                <h2 className="flex justify-center item-start text-2xl font-bold mb-4 text-gray-800">
                   DASHBOARD
                 </h2>
-                <div className="rounded-2xl bg-purple-200 dark:bg-gray-100 p-6 border-none">
+                <div
+                  className="flex-1 rounded-2xl bg-gradient-to-l from-cyan-100 via-cyan-50 to-cyan-100 
+                    dark:bg-none bg-gray-100 p-6 border-none"
+                >
                   <Dashboard />
                 </div>
               </div>

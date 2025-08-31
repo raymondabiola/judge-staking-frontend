@@ -6,13 +6,24 @@ export function Deposit() {
   const { openConnectModal } = useConnectModal();
 
   return (
-    <div className="col-span-1 md:col-span-2bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 dark:bg-gradient-to-r dark:from-gray-950 dark:via-gray-800 dark:to-gray-800 rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10">
-      <h2 className="flex justify-center item-center text-center text-2xl font-bold mt-20 mb-4 bg-gradient-to-r from-purple-700 to-amber-500 bg-clip-text text-transparent">
+    <div
+      className="h-full flex flex-col bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 
+                    dark:bg-gradient-to-r dark:from-gray-950 dark:via-gray-800 dark:to-gray-800 
+                    rounded-2xl pl-6 pr-6 pb-24 shadow-md border border-gray-200 dark:border-white/10"
+    >
+      <h2 className="flex justify-center item-center text-center text-2xl font-bold mt-20 mb-4 text-gray-800">
         {isConnected ? "Stake JUDGE to Earn JUDGE" : "Connect Wallet To Begin"}
       </h2>
-      <div className="rounded-2xl bg-purple-200 dark:bg-gray-100 p-6 border-none">
+      <div
+        className="flex-1 flex flex-col justify-center items-center rounded-2xl 
+                      bg-gradient-to-r from-cyan-100 via-cyan-50 to-cyan-100 
+                      dark:bg-none bg-gray-100 p-6 border-none"
+      >
         <button
-          className="flex justify-center px-6 py-3 rounded-2xl m-5 font-semibold bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-500 hover:to-amber-400 dark:bg-none dark:bg-amber-500 dark:hover:bg-gradient-to-r dark:hover:from-purple-800 dark:hover:to-amber-400 text-white mx-auto"
+          className="px-6 py-3 rounded-2xl font-semibold bg-cyan-700 
+                     hover:bg-cyan-500 
+                     dark:bg-yellow-500 dark:hover:bg-yellow-400 
+                     text-white"
           onClick={() => {
             if (!isConnected) {
               openConnectModal?.();

@@ -45,13 +45,13 @@ export function StatsBar() {
   });
 
   return (
-    <div className="w-full bg-gradient-to-r from-purple-800 to-amber-500 dark:from-gray-950 dark:via-gray-800 dark:to-gray-900 text-white py-6">
+    <div className="w-full bg-gradient-to-r from-cyan-800 via-cyan-600 to-cyan-400 dark:from-gray-950 dark:via-gray-800 dark:to-gray-900 text-white py-6">
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
         <div>
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Total Supply
           </h3>
-          <p className="text-xl font-bold">
+          <p className="text-xl font-bold text-yellow-400">
             {totalSupply != null && decimals != null
               ? `${Number(
                   formatUnits(totalSupply as bigint, Number(decimals))
@@ -64,7 +64,7 @@ export function StatsBar() {
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Total Staked
           </h3>
-          <p className="text-xl font-bold">
+          <p className="text-xl font-bold text-yellow-400">
             {totalStaked != null && decimals != null
               ? `${Number(
                   formatUnits(totalStaked as bigint, Number(decimals))
@@ -77,7 +77,7 @@ export function StatsBar() {
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Pool APR
           </h3>
-          <p className="text-xl font-bold">
+          <p className="text-xl font-bold text-yellow-400">
             {APR != null
               ? `${Number(formatUnits(APR as bigint, 16)).toFixed(2)}%`
               : "…"}
@@ -88,7 +88,7 @@ export function StatsBar() {
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Total Stake Weight
           </h3>
-          <p className="text-xl font-bold">
+          <p className="text-xl font-bold text-yellow-400">
             {totalStakeWeight != null && decimals != null
               ? `${Number(
                   formatUnits(totalStakeWeight as bigint, Number(decimals))
@@ -101,7 +101,7 @@ export function StatsBar() {
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Total Penalties
           </h3>
-          <p className="text-xl font-bold">
+          <p className="text-xl font-bold text-yellow-400">
             {totalPenalties != null && decimals != null
               ? `${Number(
                   formatUnits(totalPenalties as bigint, Number(decimals))
