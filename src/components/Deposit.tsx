@@ -22,7 +22,7 @@ export function Deposit() {
                       dark:bg-none bg-white p-6 border-none"
       >
         <button
-          className="px-6 py-3 rounded-2xl font-semibold bg-cyan-700 
+          className="rounded-full px-6 py-3 rounded-2xl font-semibold bg-cyan-700 
                      hover:bg-cyan-500 
                      dark:bg-yellow-500 dark:hover:bg-yellow-400 
                      text-white text-xl"
