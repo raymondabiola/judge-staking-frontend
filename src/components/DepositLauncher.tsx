@@ -1,7 +1,11 @@
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 
-export function Deposit() {
+export function DepositLauncher({
+  onOpenDeposit,
+}: {
+  onOpenDeposit: () => void;
+}) {
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
 
@@ -30,7 +34,7 @@ export function Deposit() {
             if (!isConnected) {
               openConnectModal?.();
             } else {
-              alert("Deposit JUDGE(We will wire this to the contract soon)");
+              onOpenDeposit();
             }
           }}
         >
