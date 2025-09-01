@@ -28,7 +28,7 @@ createRoot(document.getElementById("root")!).render(
         <RainbowKitProvider
           theme={lightTheme({
             accentColor: "#f5f1f5ff",
-            accentColorForeground: "purple",
+            accentColorForeground: "oklch(52% 0.105 223.128)",
             borderRadius: "large",
           })}
         >

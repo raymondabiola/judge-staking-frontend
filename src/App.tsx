@@ -19,14 +19,14 @@ function App() {
               <div
                 className="bg-gradient-to-b from-gray-100 via-gray-50 to-gray-100 
                   dark:bg-gradient-to-l dark:from-gray-950 dark:via-gray-800 dark:to-gray-800 
-                  rounded-2xl pl-6 pr-6 shadow-md border border-gray-200 dark:border-white/10"
+                  rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10"
               >
                 <h2 className="flex justify-center item-start text-2xl font-bold mb-4 text-gray-800">
                   DASHBOARD
                 </h2>
                 <div
                   className="flex-1 rounded-2xl bg-gradient-to-l from-cyan-100 via-cyan-50 to-cyan-100 
-                    dark:bg-none bg-gray-100 p-6 border-none"
+                    dark:bg-none bg-white p-6 border-none"
                 >
                   <Dashboard />
                 </div>

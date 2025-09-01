@@ -1,6 +1,23 @@
 import { useAccount, useReadContract } from "wagmi";
 import { formatUnits } from "viem";
-import { JUDGE_TOKEN_ADDRESS, JUDGE_TOKEN_ABI } from "../config/contracts.ts";
+import {
+  JUDGE_TOKEN_ADDRESS,
+  JUDGE_TOKEN_ABI,
+  JUDGE_STAKING_ADDRESS,
+  JUDGE_STAKING_ABI,
+} from "../config/contracts.ts";
+
+type userStake = {
+  id: bigint;
+  amountStaked: bigint;
+  lockUpPeriod: bigint;
+  lockUpRatio: bigint;
+  stakeWeight: bigint;
+  depositBlockNumber: bigint;
+  rewardDebt: bigint;
+  bonusRewardDebt: bigint;
+  maturityBlockNumber: bigint;
+};
 
 export function Dashboard() {
   const { address } = useAccount();
@@ -24,6 +41,16 @@ export function Dashboard() {
     args: address ? [address] : undefined,
   });
 
+  const { data: myStakes } = useReadContract({
+    address: JUDGE_STAKING_ADDRESS,
+    abi: JUDGE_STAKING_ABI,
+    functionName: "viewMyStakes",
+    args: [],
+    account: address,
+  }) as { data: userStake[] };
+
+  const myStakesNumber = myStakes?.length ?? 0;
+
   return (
     <div className="flex flex-col gap-6 h-full py-10 my-6">
       <div
@@ -43,6 +70,12 @@ export function Dashboard() {
             ${symbol?.toString() ?? ""}`
               : "0"}
           </p>
+        </div>
+        <div className="flex-1 flex justify-center items-center">
+          <h3 className="text-white uppercase">My Stakes Number</h3>
+        </div>
+        <div className="flex-1 flex justify-center items-center">
+          <p className="text-yellow-400">{myStakesNumber}</p>
         </div>
       </div>
     </div>
