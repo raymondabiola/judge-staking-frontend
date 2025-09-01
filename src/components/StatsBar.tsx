@@ -45,7 +45,7 @@ export function StatsBar() {
   });
 
   return (
-    <div className="w-full bg-cyan-700 dark:from-gray-950 dark:via-gray-800 dark:to-gray-900 text-white py-6">
+    <div className="w-full bg-cyan-700 dark:bg-gradient-to-r dark:from-gray-950 dark:via-gray-800 dark:to-gray-900 text-white py-6">
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
         <div>
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
