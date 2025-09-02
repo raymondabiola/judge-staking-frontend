@@ -41,8 +41,11 @@ export function DepositForm() {
 
   const handleMax = () => {
     if (balance != null && decimals != null) {
-      const formattedBal = formatUnits(balance as bigint, Number(decimals));
-      setStakeAmount(formattedBal);
+      const formattedBal =
+        Math.floor(
+          Number(formatUnits(balance as bigint, Number(decimals))) * 100
+        ) / 100;
+      setStakeAmount(formattedBal.toString());
     }
   };
 
@@ -67,18 +70,23 @@ export function DepositForm() {
 
   return (
     <div className="flex flex-col items-center gap-6 py-10">
-      <h2 className="text-2xl font-bold text-white">Deposit Judge</h2>
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+        Deposit Judge
+      </h2>
 
       {/* AMOUNT INPUT */}
       <div className="w-full max-w-md">
-        <label className="block text-gray-300 mb-2">Amount</label>
+        <label className="block text-gray-800 dark:text-gray-300 mb-2">
+          Amount
+        </label>
         <div className="flex items-center gap-2">
           <input
             type="number"
+            min="0"
             value={stakeAmount}
             onChange={(e) => setStakeAmount(e.target.value)}
             placeholder="Enter amount"
-            className="w-full p-3 rounded-xl bg-gray-800 text-white"
+            className="w-full p-3 rounded-xl bg-cyan-700 dark:bg-gray-800 text-yellow-400 placeholder-yellow-400 "
           />
           <button
             onClick={handleMax}
@@ -87,12 +95,14 @@ export function DepositForm() {
             Max
           </button>
         </div>
-        <p className="text-sm text-gray-400 mt-1">
+        <p className="text-sm text-gray-800 dark:text-gray-400 mt-1">
           Balance:{" "}
           {loadingBalance
             ? "Loading..."
             : balance && decimals
-            ? formatUnits(balance as bigint, Number(decimals))
+            ? Number(formatUnits(balance as bigint, Number(decimals))).toFixed(
+                2
+              )
             : "0"}{" "}
           JUDGE
         </p>
@@ -100,14 +110,16 @@ export function DepositForm() {
 
       {/* LOCKUP INPUT */}
       <div className="w-full max-w-md">
-        <label className="block text-gray-300 mb-2">Lockup Period (days)</label>
+        <label className="block text-gray-800 dark:text-gray-300 mb-2">
+          Lockup Period (days)
+        </label>
         <input
           type="number"
           min="0"
           max="360"
           value={lockUpPeriod}
           onChange={(e) => setLockUpPeriod(Number(e.target.value))}
-          className="w-full p-3 rounded-xl bg-gray-800 text-white mb-3"
+          className="w-full p-3 rounded-xl bg-cyan-700 dark:bg-gray-800 text-yellow-400 mb-3"
         />
         <input
           type="range"
@@ -115,23 +127,25 @@ export function DepositForm() {
           max="360"
           value={lockUpPeriod}
           onChange={(e) => setLockUpPeriod(Number(e.target.value))}
-          className="w-full"
+          className="w-full accent-cyan-500"
         />
-        <p className="text-sm text-gray-400 mt-1">{lockUpPeriod} days</p>
+        <p className="text-sm text-gray-800 dark:text-gray-400 mt-1">
+          {lockUpPeriod} days
+        </p>
       </div>
 
       {/* STAKE WEIGHT */}
-      <div className="w-full max-w-md">
-        <label className="block text-gray-300 mb-2">Stake Weight</label>
-        <div className="p-3 rounded-xl bg-gray-900 text-yellow-400">
-          {stakeWeight.toFixed(2)}
-        </div>
+      <div className="flex flex-row gap-2 w-full max-w-md text-cyan-800 dark:text-yellow-400">
+        <label className="block text-gray-800 dark:text-gray-300 mb-2">
+          Stake Weight:
+        </label>
+        {stakeWeight.toFixed(2)}
       </div>
 
       {/* DEPOSIT BUTTON */}
       <button
         onClick={handleDeposit}
-        className="px-6 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-500 shadow-md"
+        className="px-6 py-3 bg-cyan-700 text-white rounded-2xl hover:bg-cyan-600 shadow-md"
       >
         Deposit
       </button>
