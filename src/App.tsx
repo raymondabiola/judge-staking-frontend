@@ -11,6 +11,7 @@ import { useAccount } from "wagmi";
 function App() {
   const { address } = useAccount();
   const [isDepositOpen, setIsDepositOpen] = useState(false);
+
   const HomeLayout = (
     <>
       <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gradient-to-b dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors duration-300">
@@ -25,7 +26,7 @@ function App() {
                   dark:bg-gradient-to-l dark:from-gray-950 dark:via-gray-800 dark:to-gray-800 
                   rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10"
               >
-                <h2 className="flex justify-center item-start text-2xl font-bold mb-4 text-gray-800">
+                <h2 className="flex justify-center item-start text-2xl font-bold mb-2 text-gray-800">
                   DASHBOARD
                 </h2>
                 <div

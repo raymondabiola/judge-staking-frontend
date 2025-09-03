@@ -75,17 +75,6 @@ export function StatsBar() {
 
         <div>
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
-            Pool APR
-          </h3>
-          <p className="text-xl font-bold text-yellow-400">
-            {APR != null
-              ? `${Number(formatUnits(APR as bigint, 16)).toFixed(2)}%`
-              : "…"}
-          </p>
-        </div>
-
-        <div>
-          <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Total Stake Weight
           </h3>
           <p className="text-xl font-bold text-yellow-400">
@@ -93,6 +82,17 @@ export function StatsBar() {
               ? `${Number(
                   formatUnits(totalStakeWeight as bigint, Number(decimals))
                 ).toFixed(2)}`
+              : "…"}
+          </p>
+        </div>
+
+        <div>
+          <h3 className="text-sm uppercase tracking-wide text-gray-200">
+            Pool APR
+          </h3>
+          <p className="text-xl font-bold text-yellow-400">
+            {APR != null
+              ? `${Number(formatUnits(APR as bigint, 16)).toFixed(2)}%`
               : "…"}
           </p>
         </div>
