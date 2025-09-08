@@ -1,15 +1,15 @@
-import { useState, useMemo } from "react";
-import { useAccount, useReadContract, useReadContracts } from "wagmi";
-import { formatUnits } from "viem";
-
+// Stakes.tsx (relevant parts)
+import { type Abi, formatUnits } from "viem";
+import { useAccount, usePublicClient, useBlockNumber } from "wagmi";
+import { useEffect, useState } from "react";
 import {
   JUDGE_STAKING_ADDRESS,
   JUDGE_STAKING_ABI,
-  JUDGE_TOKEN_ABI,
   JUDGE_TOKEN_ADDRESS,
+  JUDGE_TOKEN_ABI,
 } from "../config/contracts";
 
-type userStake = {
+type UserStake = {
   id: bigint;
   amountStaked: bigint;
   lockUpPeriod: bigint;
@@ -23,51 +23,94 @@ type userStake = {
 
 export function Stakes() {
   const { address } = useAccount();
+  const publicClient = usePublicClient();
+
   const [isOpen, setIsOpen] = useState(false);
+  const [myStakes, setMyStakes] = useState<UserStake[]>([]);
+  const [decimals, setDecimals] = useState<number>(18);
+  const [pendingByIndex, setPendingByIndex] = useState<Record<number, bigint>>(
+    {}
+  );
+  const [pendingErr, setPendingErr] = useState<Record<number, string>>({});
+  const { data: blockNumber } = useBlockNumber({ watch: true });
 
-  // Load stakes
-  const { data: myStakes } = useReadContract({
-    address: JUDGE_STAKING_ADDRESS,
-    abi: JUDGE_STAKING_ABI,
-    functionName: "viewMyStakes",
-    args: [],
-    account: address,
-  }) as { data: userStake[] };
+  // 1) Load stakes & token decimals
+  useEffect(() => {
+    (async () => {
+      if (!publicClient || !address) return;
 
-  // Token decimals
-  const { data: decimals } = useReadContract({
-    address: JUDGE_TOKEN_ADDRESS,
-    abi: JUDGE_TOKEN_ABI,
-    functionName: "decimals",
-  });
+      const [stakes, tokenDecimals] = await Promise.all([
+        publicClient.readContract({
+          address: JUDGE_STAKING_ADDRESS as `0x${string}`,
+          abi: JUDGE_STAKING_ABI as Abi,
+          functionName: "viewMyStakes",
+          account: address,
+        }) as Promise<UserStake[]>,
+        publicClient.readContract({
+          address: JUDGE_TOKEN_ADDRESS as `0x${string}`,
+          abi: JUDGE_TOKEN_ABI as Abi,
+          functionName: "decimals",
+        }) as Promise<number | bigint>,
+      ]);
 
-  // Batch read: pending rewards for each stake
-  const { data: rewardsData } = useReadContracts({
-    contracts:
-      myStakes?.map((stake) => ({
-        address: JUDGE_STAKING_ADDRESS as `0x${string}`,
-        abi: JUDGE_STAKING_ABI,
-        functionName: "viewMyPendingRewards",
-        args: [stake.id],
-      })) ?? [],
-  });
+      setMyStakes(stakes ?? []);
+      setDecimals(Number(tokenDecimals ?? 18));
+    })().catch(console.error);
+  }, [address, publicClient]);
 
-  // Map stake.id -> pending reward value
-  const rewardsMap = useMemo(() => {
-    const map: Record<string, bigint> = {};
-    if (rewardsData && myStakes) {
-      rewardsData.forEach((res, i) => {
-        if (res.status === "success") {
-          map[myStakes[i].id.toString()] = res.result as bigint;
-        }
+  // 2) Load pending rewards per *index* with correct sender
+  useEffect(() => {
+    (async () => {
+      if (!publicClient || !address || !myStakes?.length) return;
+
+      const entries = await Promise.all(
+        myStakes.map(async (_stake, i) => {
+          try {
+            const res = await publicClient.readContract({
+              address: JUDGE_STAKING_ADDRESS as `0x${string}`,
+              abi: JUDGE_STAKING_ABI as Abi,
+              functionName: "viewMyPendingRewards",
+              args: [i], // ✅ index, not stake.id
+              account: address, // ✅ msg.sender
+            });
+            return { i, ok: true as const, val: res as bigint };
+          } catch (err: unknown) {
+            let reason = "reverted";
+            if (err && typeof err === "object") {
+              const e = err as { shortMessage?: string; message?: string };
+              reason = e.shortMessage ?? e.message ?? reason;
+            }
+            return { i, ok: false as const, reason };
+          }
+        })
+      );
+
+      const okMap: Record<number, bigint> = {};
+      const errMap: Record<number, string> = {};
+      entries.forEach((e) => {
+        if (e.ok) okMap[e.i] = e.val;
+        else errMap[e.i] = e.reason;
       });
-    }
-    return map;
-  }, [rewardsData, myStakes]);
+      setPendingByIndex(okMap);
+      setPendingErr(errMap);
+    })().catch(console.error);
+  }, [address, myStakes, publicClient]);
 
-  const getWithdrawDate = (lockupDays: bigint) => {
-    const ms = Number(lockupDays) * 24 * 60 * 60 * 1000;
-    return new Date(Date.now() + ms).toLocaleDateString();
+  // helper: withdrawable date from maturity vs current block
+  const getWithdrawDate = (maturityBlock: bigint, currentBlock?: bigint) => {
+    if (!currentBlock) return "…";
+    if (maturityBlock === currentBlock) return "Now";
+    const diff =
+      maturityBlock > currentBlock
+        ? maturityBlock - currentBlock
+        : currentBlock - maturityBlock;
+    const ms = Number(diff) * 12 * 1000; // approx 12s per block
+    const d = new Date(Date.now() + (maturityBlock > currentBlock ? ms : -ms));
+    return d.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
   return (
@@ -80,34 +123,31 @@ export function Stakes() {
                       bg-gradient-to-r from-cyan-100 via-cyan-50 to-cyan-100 
                       dark:bg-none bg-white p-6 border-none"
       >
-        {/* Button to open modal */}
         <button
           onClick={() => setIsOpen(true)}
-          className="px-6 py-3 bg-cyan-700 
-                     hover:bg-cyan-500 
-                     dark:bg-yellow-500 dark:hover:bg-yellow-400 
-                     text-white rounded-full text-xl"
+          className="px-4 py-2 bg-cyan-700 hover:bg-cyan-500 text-white rounded-full dark:bg-yellow-500 dark:hover:bg-yellow-400 
+                     text-l"
         >
-          View Stakes
+          VIEW STAKES
         </button>
       </div>
-      {/* Modal */}
+
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
           <div className="bg-gray-900 p-6 rounded-2xl w-full max-w-2xl shadow-lg relative">
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 text-white hover:text-gray-300"
+              className="absolute top-4 right-4 text-white"
             >
               ✕
             </button>
             <h2 className="text-xl font-bold text-white mb-4">My Stakes</h2>
 
             <div className="space-y-4">
-              {myStakes?.map((stake) => (
+              {myStakes.map((stake, i) => (
                 <details
                   key={stake.id.toString()}
-                  className="bg-gray-800 rounded-xl p-4 text-sm group"
+                  className="bg-gray-800 rounded-xl p-4 text-sm"
                 >
                   <summary className="cursor-pointer text-white font-semibold">
                     Stake ID: {stake.id.toString()}
@@ -115,31 +155,49 @@ export function Stakes() {
                   <div className="mt-3 space-y-2 text-gray-300">
                     <p>
                       <span className="font-semibold">Amount Staked:</span>{" "}
-                      {decimals
-                        ? formatUnits(stake.amountStaked, Number(decimals))
-                        : stake.amountStaked.toString()}{" "}
-                      JUDGE
+                      {formatUnits(stake.amountStaked, decimals)} JUDGE
                     </p>
+
                     <p>
                       <span className="font-semibold">Pending Rewards:</span>{" "}
-                      {rewardsMap[stake.id.toString()]
-                        ? formatUnits(
-                            rewardsMap[stake.id.toString()],
-                            Number(decimals ?? 18)
-                          )
-                        : "0"}{" "}
-                      JUDGE
+                      {pendingErr[i]
+                        ? "N/A (reverted)"
+                        : pendingByIndex[i] !== undefined
+                        ? `${formatUnits(pendingByIndex[i], decimals)} JUDGE`
+                        : "…"}
                     </p>
+
                     <p>
                       <span className="font-semibold">Withdrawable From:</span>{" "}
-                      {getWithdrawDate(stake.lockUpPeriod)}
+                      {getWithdrawDate(stake.maturityBlockNumber, blockNumber)}
                     </p>
-                    <button
-                      disabled
-                      className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 disabled:opacity-60"
-                    >
-                      Withdraw (coming soon)
-                    </button>
+
+                    <div className="flex gap-2 pt-2">
+                      <button
+                        disabled
+                        className="px-3 py-2 rounded bg-green-600 text-white disabled:opacity-60"
+                      >
+                        Claim Rewards
+                      </button>
+                      <button
+                        disabled
+                        className="px-3 py-2 rounded bg-blue-600 text-white disabled:opacity-60"
+                      >
+                        Withdraw
+                      </button>
+                      <button
+                        disabled
+                        className="px-3 py-2 rounded bg-amber-600 text-white disabled:opacity-60"
+                      >
+                        Early Withdraw
+                      </button>
+                      <button
+                        disabled
+                        className="px-3 py-2 rounded bg-purple-600 text-white disabled:opacity-60"
+                      >
+                        Withdraw All
+                      </button>
+                    </div>
                   </div>
                 </details>
               ))}

@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useReadContract,
+  useWriteContract,
+  usePublicClient,
+} from "wagmi";
 import { formatUnits, parseUnits } from "viem";
 import {
   JUDGE_TOKEN_ADDRESS,
@@ -24,10 +29,14 @@ export function DepositForm() {
   });
 
   const { writeContractAsync } = useWriteContract();
+  const publicClient = usePublicClient();
 
   const [stakeAmount, setStakeAmount] = useState("");
   const [lockUpPeriod, setLockUpPeriod] = useState(0);
   const [stakeWeight, setStakeWeight] = useState(0);
+  const [approveState, setApproveState] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
+  const [fadedButton, setFadedButton] = useState(false);
 
   useEffect(() => {
     const amount = Number(stakeAmount);
@@ -49,27 +58,80 @@ export function DepositForm() {
     }
   };
 
+  const handleApprove = async () => {
+    if (!stakeAmount || !lockUpPeriod) return;
+
+    try {
+      const parsedAmount = parseUnits(stakeAmount, Number(decimals));
+      setLoadingMessage("Approval in progress...");
+      setFadedButton(true);
+      const txHash = await writeContractAsync({
+        address: JUDGE_TOKEN_ADDRESS,
+        abi: JUDGE_TOKEN_ABI,
+        functionName: "approve",
+        args: [JUDGE_STAKING_ADDRESS, parsedAmount],
+        account: address,
+      });
+
+      const receipt = await publicClient!.waitForTransactionReceipt({
+        hash: txHash,
+      });
+
+      if (receipt.status === "success") {
+        alert("Approve Successful✅");
+        setApproveState(false);
+      } else {
+        alert("Approve Failed❌ (reverted on-chain)");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Approve Failed❌ (tx not sent or rejected)");
+    } finally {
+      setLoadingMessage(null);
+      setFadedButton(false);
+    }
+  };
+
   const handleDeposit = async () => {
     if (!stakeAmount || !lockUpPeriod) return;
 
     try {
       const parsedAmount = parseUnits(stakeAmount, Number(decimals));
-      await writeContractAsync({
+      setLoadingMessage("Deposit in progress...");
+      setFadedButton(true);
+      const txHash = await writeContractAsync({
         address: JUDGE_STAKING_ADDRESS,
         abi: JUDGE_STAKING_ABI,
         functionName: "deposit",
         args: [parsedAmount, BigInt(lockUpPeriod)],
         account: address,
       });
-      alert("Deposit Successful✅");
+
+      const receipt = await publicClient!.waitForTransactionReceipt({
+        hash: txHash,
+      });
+      if (receipt.status === "success") {
+        alert("Deposit Successful✅");
+        setApproveState(true);
+      } else {
+        alert("Deposit Failed❌ (reverted on-chain");
+      }
     } catch (err) {
       console.error(err);
-      alert("Deposit Failed❌");
+      alert("Deposit Failed❌ (tx not sent or rejected)");
+    } finally {
+      setLoadingMessage(null);
+      setFadedButton(false);
     }
   };
 
   return (
     <div className="flex flex-col items-center gap-6 py-10">
+      {loadingMessage && (
+        <p className="text-cyan-700 dark:text-yellow-400 font-semibold">
+          {loadingMessage}
+        </p>
+      )}
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
         Deposit Judge
       </h2>
@@ -142,13 +204,37 @@ export function DepositForm() {
         {stakeWeight.toFixed(2)}
       </div>
 
-      {/* DEPOSIT BUTTON */}
-      <button
-        onClick={handleDeposit}
-        className="px-6 py-3 bg-cyan-700 text-white rounded-2xl hover:bg-cyan-600 shadow-md"
-      >
-        Deposit
-      </button>
+      {/* APPROVE AND DEPOSIT BUTTON */}
+      {approveState &&
+        (!fadedButton ? (
+          <button
+            onClick={handleApprove}
+            className="px-6 py-3 bg-cyan-700 text-white rounded-2xl hover:bg-cyan-600 shadow-md"
+          >
+            Approve
+          </button>
+        ) : (
+          <button
+            disabled
+            className="px-6 py-3 bg-cyan-700 text-white rounded-2xl shadow-md opacity-50 cursor-not-allowed"
+          >
+            Approve
+          </button>
+        ))}
+
+      {!approveState &&
+        (!fadedButton ? (
+          <button
+            onClick={handleDeposit}
+            className="px-6 py-3 bg-cyan-700 text-white rounded-2xl hover:bg-cyan-600 shadow-md"
+          >
+            Deposit
+          </button>
+        ) : (
+          <button className="px-6 py-3 bg-cyan-700 text-white rounded-2xl shadow-md opacity-50 cursor-not-allowed">
+            Deposit
+          </button>
+        ))}
     </div>
   );
 }
