@@ -134,16 +134,17 @@ export function Stakes() {
 
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-          <div className="bg-gray-900 p-6 rounded-2xl w-full max-w-2xl shadow-lg relative">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 text-white"
-            >
-              ✕
-            </button>
-            <h2 className="text-xl font-bold text-white mb-4">My Stakes</h2>
-
-            <div className="space-y-4">
+          <div className="bg-gray-900 rounded-2xl w-full max-w-2xl shadow-lg max-h-[90vh] flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b border-gray-700 top-0 bg-gray-900 z-10">
+              <h2 className="text-xl font-bold text-white mb-4">My Stakes</h2>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-4 right-4 text-white"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="overflow-y-auto p-4 space-y-4">
               {myStakes.map((stake, i) => (
                 <details
                   key={stake.id.toString()}
@@ -163,7 +164,13 @@ export function Stakes() {
                       {pendingErr[i]
                         ? "N/A (reverted)"
                         : pendingByIndex[i] !== undefined
-                        ? `${formatUnits(pendingByIndex[i], decimals)} JUDGE`
+                        ? `${
+                            Math.floor(
+                              Number(
+                                formatUnits(pendingByIndex[i], Number(decimals))
+                              ) * 100
+                            ) / 100
+                          } JUDGE`
                         : "…"}
                     </p>
 
