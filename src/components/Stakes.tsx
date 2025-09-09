@@ -1,6 +1,11 @@
 // Stakes.tsx (relevant parts)
 import { type Abi, formatUnits } from "viem";
-import { useAccount, usePublicClient, useBlockNumber } from "wagmi";
+import {
+  useAccount,
+  useWriteContract,
+  usePublicClient,
+  useBlockNumber,
+} from "wagmi";
 import { useEffect, useState } from "react";
 import {
   JUDGE_STAKING_ADDRESS,
@@ -23,6 +28,7 @@ type UserStake = {
 
 export function Stakes() {
   const { address } = useAccount();
+  const { writeContractAsync } = useWriteContract();
   const publicClient = usePublicClient();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +38,9 @@ export function Stakes() {
     {}
   );
   const [pendingErr, setPendingErr] = useState<Record<number, string>>({});
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
+  const [fadedButton, setFadedButton] = useState(false);
+
   const { data: blockNumber } = useBlockNumber({ watch: true });
 
   // 1) Load stakes & token decimals
@@ -113,6 +122,66 @@ export function Stakes() {
     });
   };
 
+  const handleClaim = async (i: number) => {
+    try {
+      setLoadingMessage("Claim transaction in progress...");
+      setFadedButton(true);
+      const txHash = await writeContractAsync({
+        address: JUDGE_STAKING_ADDRESS,
+        abi: JUDGE_STAKING_ABI,
+        functionName: "claimRewards",
+        args: [i],
+        account: address,
+      });
+
+      const receipt = await publicClient!.waitForTransactionReceipt({
+        hash: txHash,
+      });
+
+      if (receipt.status === "success") {
+        alert("Claim Successful✅");
+      } else {
+        alert("Claim Failed❌ (reverted on-chain)");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Claim Failed❌ (tx not sent or rejected)");
+    } finally {
+      setLoadingMessage(null);
+      setFadedButton(false);
+    }
+  };
+
+  const handleWithdrawAll = async (i: number) => {
+    try {
+      setLoadingMessage("Withdrawal transaction in progress...");
+      setFadedButton(true);
+      const txHash = await writeContractAsync({
+        address: JUDGE_STAKING_ADDRESS,
+        abi: JUDGE_STAKING_ABI,
+        functionName: "withdrawAll",
+        args: [i],
+        account: address,
+      });
+
+      const receipt = await publicClient!.waitForTransactionReceipt({
+        hash: txHash,
+      });
+
+      if (receipt.status === "success") {
+        alert("Withdrawal Successful✅");
+      } else {
+        alert("Withdrawal Failed❌ (reverted on-chain)");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Withdrawal Failed❌ (tx not sent or rejected)");
+    } finally {
+      setLoadingMessage(null);
+      setFadedButton(false);
+    }
+  };
+
   return (
     <>
       <h2 className="flex justify-center item-center text-center text-2xl font-bold mt-4 mb-2 text-gray-800">
@@ -144,6 +213,14 @@ export function Stakes() {
                 ✕
               </button>
             </div>
+            {loadingMessage && (
+              <div className="p-6 items-center justify-center">
+                <p className="text-cyan-700 dark:text-yellow-400 font-semibold">
+                  {loadingMessage}
+                </p>
+              </div>
+            )}
+
             <div className="overflow-y-auto p-4 space-y-4">
               {myStakes.map((stake, i) => (
                 <details
@@ -180,12 +257,21 @@ export function Stakes() {
                     </p>
 
                     <div className="flex gap-2 pt-2">
-                      <button
-                        disabled
-                        className="px-3 py-2 rounded bg-green-600 text-white disabled:opacity-60"
-                      >
-                        Claim Rewards
-                      </button>
+                      {!fadedButton ? (
+                        <button
+                          onClick={() => handleClaim(i)}
+                          className="px-3 py-2 rounded bg-green-600 text-white"
+                        >
+                          Claim Rewards
+                        </button>
+                      ) : (
+                        <button
+                          disabled
+                          className="px-3 py-2 rounded bg-green-600 text-white disabled:opacity-60 cursor-not-allowed"
+                        >
+                          Claim Rewards
+                        </button>
+                      )}
                       <button
                         disabled
                         className="px-3 py-2 rounded bg-blue-600 text-white disabled:opacity-60"
@@ -198,12 +284,21 @@ export function Stakes() {
                       >
                         Early Withdraw
                       </button>
-                      <button
-                        disabled
-                        className="px-3 py-2 rounded bg-purple-600 text-white disabled:opacity-60"
-                      >
-                        Withdraw All
-                      </button>
+                      {!fadedButton ? (
+                        <button
+                          onClick={() => handleWithdrawAll(i)}
+                          className="px-3 py-2 rounded bg-purple-600 text-white"
+                        >
+                          Withdraw All
+                        </button>
+                      ) : (
+                        <button
+                          disabled
+                          className="px-3 py-2 rounded bg-purple-600 text-white disabled:opacity-60 cursor-not-allowed"
+                        >
+                          Withdraw All
+                        </button>
+                      )}
                     </div>
                   </div>
                 </details>
