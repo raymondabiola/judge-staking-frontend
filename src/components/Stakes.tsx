@@ -13,8 +13,10 @@ import {
   JUDGE_TOKEN_ADDRESS,
   JUDGE_TOKEN_ABI,
 } from "../config/contracts";
+import { WithdrawalForm } from "./WithdrawalForm.tsx";
+import { EarlyWithdrawalForm } from "./EarlyWithdrawForm.tsx";
 
-type UserStake = {
+type userStake = {
   id: bigint;
   amountStaked: bigint;
   lockUpPeriod: bigint;
@@ -32,7 +34,7 @@ export function Stakes() {
   const publicClient = usePublicClient();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [myStakes, setMyStakes] = useState<UserStake[]>([]);
+  const [myStakes, setMyStakes] = useState<userStake[]>([]);
   const [decimals, setDecimals] = useState<number>(18);
   const [pendingByIndex, setPendingByIndex] = useState<Record<number, bigint>>(
     {}
@@ -40,6 +42,11 @@ export function Stakes() {
   const [pendingErr, setPendingErr] = useState<Record<number, string>>({});
   const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [fadedButton, setFadedButton] = useState(false);
+  const [isWithdrawalOpen, setIsWithdrawalOpen] = useState(false);
+  const [isEarlyWithdrawalOpen, setIsEarlyWithdrawalOpen] = useState(false);
+  const [selectedStakeIndex, setSelectedStakeIndex] = useState<number | null>(
+    null
+  );
 
   const { data: blockNumber } = useBlockNumber({ watch: true });
 
@@ -54,7 +61,7 @@ export function Stakes() {
           abi: JUDGE_STAKING_ABI as Abi,
           functionName: "viewMyStakes",
           account: address,
-        }) as Promise<UserStake[]>,
+        }) as Promise<userStake[]>,
         publicClient.readContract({
           address: JUDGE_TOKEN_ADDRESS as `0x${string}`,
           abi: JUDGE_TOKEN_ABI as Abi,
@@ -104,6 +111,17 @@ export function Stakes() {
       setPendingErr(errMap);
     })().catch(console.error);
   }, [address, myStakes, publicClient]);
+
+  const getWithdrawTimestamp = (
+    maturityBlock: bigint,
+    currentBlock?: bigint
+  ) => {
+    if (!currentBlock) return null;
+    const diff =
+      maturityBlock > currentBlock ? maturityBlock - currentBlock : 0n; // if already matured, no wait
+    const ms = Number(diff) * 12 * 1000; // approx 12s per block
+    return Date.now() + ms;
+  };
 
   // helper: withdrawable date from maturity vs current block
   const getWithdrawDate = (maturityBlock: bigint, currentBlock?: bigint) => {
@@ -222,88 +240,159 @@ export function Stakes() {
             )}
 
             <div className="overflow-y-auto p-4 space-y-4">
-              {myStakes.map((stake, i) => (
-                <details
-                  key={stake.id.toString()}
-                  className="bg-gray-800 rounded-xl p-4 text-sm"
-                >
-                  <summary className="cursor-pointer text-white font-semibold">
-                    Stake ID: {stake.id.toString()}
-                  </summary>
-                  <div className="mt-3 space-y-2 text-gray-300">
-                    <p>
-                      <span className="font-semibold">Amount Staked:</span>{" "}
-                      {formatUnits(stake.amountStaked, decimals)} JUDGE
-                    </p>
+              {myStakes.map((stake, i) => {
+                const isMatured =
+                  getWithdrawTimestamp(
+                    stake.maturityBlockNumber,
+                    blockNumber
+                  )! <= Date.now();
 
-                    <p>
-                      <span className="font-semibold">Pending Rewards:</span>{" "}
-                      {pendingErr[i]
-                        ? "N/A (reverted)"
-                        : pendingByIndex[i] !== undefined
-                        ? `${
-                            Math.floor(
-                              Number(
-                                formatUnits(pendingByIndex[i], Number(decimals))
-                              ) * 100
-                            ) / 100
-                          } JUDGE`
-                        : "…"}
-                    </p>
+                const isNotMatured =
+                  getWithdrawTimestamp(
+                    stake.maturityBlockNumber,
+                    blockNumber
+                  )! > Date.now();
+                const isDisabled = !isMatured || fadedButton;
+                const isDisabled2 = !isNotMatured || fadedButton;
 
-                    <p>
-                      <span className="font-semibold">Withdrawable From:</span>{" "}
-                      {getWithdrawDate(stake.maturityBlockNumber, blockNumber)}
-                    </p>
+                return (
+                  <details
+                    key={stake.id.toString()}
+                    className="bg-gray-800 rounded-xl p-4 text-sm"
+                  >
+                    <summary className="cursor-pointer text-white font-semibold">
+                      Stake ID: {stake.id.toString()}
+                    </summary>
+                    <div className="mt-3 space-y-2 text-gray-300">
+                      <p>
+                        <span className="font-semibold">Amount Staked:</span>{" "}
+                        {Math.floor(
+                          Number(formatUnits(stake.amountStaked, decimals)) *
+                            100
+                        ) / 100}{" "}
+                        JUDGE
+                      </p>
 
-                    <div className="flex gap-2 pt-2">
-                      {!fadedButton ? (
+                      <p>
+                        <span className="font-semibold">Pending Rewards:</span>{" "}
+                        {pendingErr[i]
+                          ? "N/A (reverted)"
+                          : pendingByIndex[i] !== undefined
+                          ? `${
+                              Math.floor(
+                                Number(
+                                  formatUnits(
+                                    pendingByIndex[i],
+                                    Number(decimals)
+                                  )
+                                ) * 100
+                              ) / 100
+                            } JUDGE`
+                          : "…"}
+                      </p>
+
+                      <p>
+                        <span className="font-semibold">
+                          Withdrawable From:
+                        </span>{" "}
+                        {getWithdrawDate(
+                          stake.maturityBlockNumber,
+                          blockNumber
+                        )}
+                      </p>
+
+                      <div className="flex gap-2 pt-2">
+                        {!fadedButton ? (
+                          <button
+                            onClick={() => handleClaim(i)}
+                            className="px-3 py-2 rounded bg-green-600 text-white"
+                          >
+                            Claim Rewards
+                          </button>
+                        ) : (
+                          <button
+                            disabled
+                            className="px-3 py-2 rounded bg-green-600 text-white disabled:opacity-60 cursor-not-allowed"
+                          >
+                            Claim Rewards
+                          </button>
+                        )}
+
                         <button
-                          onClick={() => handleClaim(i)}
-                          className="px-3 py-2 rounded bg-green-600 text-white"
+                          onClick={() => {
+                            setSelectedStakeIndex(i);
+                            setIsWithdrawalOpen(true);
+                          }}
+                          disabled={isDisabled}
+                          className={`px-3 py-2 rounded text-white ${
+                            isDisabled
+                              ? "bg-blue-600 opacity-60 cursor-not-allowed"
+                              : "bg-blue-600 hover:bg-blue-500"
+                          }`}
                         >
-                          Claim Rewards
+                          Withdraw
                         </button>
-                      ) : (
+
                         <button
-                          disabled
-                          className="px-3 py-2 rounded bg-green-600 text-white disabled:opacity-60 cursor-not-allowed"
+                          onClick={() => setIsEarlyWithdrawalOpen(true)}
+                          disabled={isDisabled2}
+                          className={`px-3 py-2 rounded text-white ${
+                            isDisabled2
+                              ? "bg-amber-600 opacity-60 cursor-not-allowed"
+                              : "bg-amber-600 hover:bg-amber-500"
+                          }`}
                         >
-                          Claim Rewards
+                          Early Withdraw
                         </button>
-                      )}
-                      <button
-                        disabled
-                        className="px-3 py-2 rounded bg-blue-600 text-white disabled:opacity-60"
-                      >
-                        Withdraw
-                      </button>
-                      <button
-                        disabled
-                        className="px-3 py-2 rounded bg-amber-600 text-white disabled:opacity-60"
-                      >
-                        Early Withdraw
-                      </button>
-                      {!fadedButton ? (
                         <button
                           onClick={() => handleWithdrawAll(i)}
-                          className="px-3 py-2 rounded bg-purple-600 text-white"
+                          disabled={isDisabled}
+                          className={`px-3 py-2 rounded text-white ${
+                            isDisabled
+                              ? "bg-purple-600 opacity-60 cursor-not-allowed"
+                              : "bg-purple-600 hover:bg-purple-500"
+                          }`}
                         >
                           Withdraw All
                         </button>
-                      ) : (
-                        <button
-                          disabled
-                          className="px-3 py-2 rounded bg-purple-600 text-white disabled:opacity-60 cursor-not-allowed"
-                        >
-                          Withdraw All
-                        </button>
-                      )}
+                      </div>
                     </div>
-                  </div>
-                </details>
-              ))}
+                  </details>
+                );
+              })}
             </div>
+          </div>
+        </div>
+      )}
+
+      {isWithdrawalOpen && selectedStakeIndex !== null && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+          <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-2xl w-full max-w-lg shadow-lg">
+            <button
+              onClick={() => setIsWithdrawalOpen(false)}
+              className="absolute top-4 right-4 text-white hover:text-gray-300"
+            >
+              ✕
+            </button>
+            <WithdrawalForm
+              stake={myStakes[selectedStakeIndex]}
+              stakeIndex={selectedStakeIndex}
+              decimals={decimals}
+            />
+          </div>
+        </div>
+      )}
+
+      {isEarlyWithdrawalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+          <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-2xl w-full max-w-lg shadow-lg">
+            <button
+              onClick={() => setIsWithdrawalOpen(false)}
+              className="absolute top-4 right-4 text-white hover:text-gray-300"
+            >
+              ✕
+            </button>
+            <EarlyWithdrawalForm />
           </div>
         </div>
       )}
