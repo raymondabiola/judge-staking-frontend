@@ -116,6 +116,11 @@ export function WithdrawalForm({
           <input
             type="number"
             min="0"
+            max={
+              Math.floor(
+                Number(formatUnits(stake.amountStaked, decimals)) * 100
+              ) / 100
+            }
             value={stakeAmountWithdrawn}
             onChange={(e) => setStakeAmountWithdrawn(e.target.value)}
             placeholder="Enter amount"

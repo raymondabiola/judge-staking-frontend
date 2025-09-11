@@ -25,7 +25,17 @@ type userStake = {
   maturityBlockNumber: bigint;
 };
 
-export function EarlyWithdrawalForm() {
+type EarlyWithdrawalFormProps = {
+  stake: userStake;
+  stakeIndex: number;
+  decimals: number;
+};
+
+export function EarlyWithdrawalForm({
+  stake,
+  stakeIndex,
+  decimals,
+}: EarlyWithdrawalFormProps) {
   const { address } = useAccount();
   const { data: balance, isLoading: loadingBalance } = useReadContract({
     address: JUDGE_TOKEN_ADDRESS,
@@ -34,49 +44,32 @@ export function EarlyWithdrawalForm() {
     args: address ? [address] : undefined,
   });
 
-  const { data: decimals } = useReadContract({
-    address: JUDGE_TOKEN_ADDRESS,
-    abi: JUDGE_TOKEN_ABI,
-    functionName: "decimals",
-  });
-
   const { writeContractAsync } = useWriteContract();
   const publicClient = usePublicClient();
 
-  const [selectedStakeIndex] = useState<number | null>(null);
   const [stakeAmountWithdrawn, setStakeAmountWithdrawn] = useState("");
   const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
-  const [myStakes] = useState<userStake[]>([]);
   const [fadedButton, setFadedButton] = useState(false);
 
   const handleMax = async () => {
-    if (selectedStakeIndex === null) return;
-    const stake = myStakes[selectedStakeIndex];
-    if (stake && decimals != null) {
-      const formattedStakedBalance =
-        Math.floor(
-          Number(formatUnits(stake.amountStaked as bigint, Number(decimals))) *
-            100
-        ) / 100;
-      setStakeAmountWithdrawn(formattedStakedBalance.toString());
-    }
+    const formattedStakedBalance =
+      Math.floor(
+        Number(formatUnits(stake.amountStaked as bigint, Number(decimals))) *
+          100
+      ) / 100;
+    setStakeAmountWithdrawn(formattedStakedBalance.toString());
   };
 
-  const handleWithdraw = async () => {
-    if (selectedStakeIndex === null)
-      return alert("Please select a stake first.");
-    const stake = myStakes[selectedStakeIndex];
-    if (!stake.amountStaked) return;
-
+  const handleEarlyWithdraw = async () => {
     try {
-      const parsedAmount = parseUnits(stakeAmountWithdrawn, Number(decimals));
+      const parsedAmount = parseUnits(stakeAmountWithdrawn, decimals);
       setLoadingMessage("Withdrawal in progress...");
       setFadedButton(true);
       const txHash = await writeContractAsync({
         address: JUDGE_STAKING_ADDRESS,
         abi: JUDGE_STAKING_ABI,
-        functionName: "withdraw",
-        args: [parsedAmount, selectedStakeIndex],
+        functionName: "earlyWithdraw",
+        args: [parsedAmount, stakeIndex],
         account: address,
       });
 
@@ -106,8 +99,17 @@ export function EarlyWithdrawalForm() {
       )}
 
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-        Withdraw Judge
+        Withdraw Judge Before Stake Matures
       </h2>
+
+      <p className="italic text-red-700 dark:text-red-400">
+        A 10% penalty applies for early withdrawals
+      </p>
+
+      <p className="text-gray-700 dark:text-gray-400">
+        <span className="font-semibold">Balance(Stake {stakeIndex}):</span>{" "}
+        {Number(formatUnits(stake.amountStaked, decimals)).toFixed(2)} JUDGE
+      </p>
 
       {/* AMOUNT INPUT */}
       <div className="w-full max-w-md">
@@ -118,6 +120,11 @@ export function EarlyWithdrawalForm() {
           <input
             type="number"
             min="0"
+            max={
+              Math.floor(
+                Number(formatUnits(stake.amountStaked, decimals)) * 100
+              ) / 100
+            }
             value={stakeAmountWithdrawn}
             onChange={(e) => setStakeAmountWithdrawn(e.target.value)}
             placeholder="Enter amount"
@@ -131,7 +138,7 @@ export function EarlyWithdrawalForm() {
           </button>
         </div>
         <p className="text-sm text-gray-800 dark:text-gray-400 mt-1">
-          Balance:{" "}
+          Wallet Balance:{" "}
           {loadingBalance
             ? "Loading..."
             : balance && decimals
@@ -145,14 +152,14 @@ export function EarlyWithdrawalForm() {
 
       {!fadedButton ? (
         <button
-          onClick={() => handleWithdraw()}
+          onClick={() => handleEarlyWithdraw()}
           className="px-6 py-3 bg-cyan-700 text-white rounded-2xl hover:bg-cyan-600 shadow-md"
         >
-          Withdraw
+          Early Withdraw
         </button>
       ) : (
         <button className="px-6 py-3 bg-cyan-700 text-white rounded-2xl shadow-md opacity-50 cursor-not-allowed">
-          Withdraw
+          Early Withdraw
         </button>
       )}
     </div>
