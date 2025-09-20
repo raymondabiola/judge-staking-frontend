@@ -4,12 +4,15 @@ export function Footer() {
   const { address } = useAccount();
 
   return (
-    <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-800 dark:text-gray-200">
+    <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-800 dark:text-gray-100">
       <div className="flex items-center gap-2">
         <span className="px-3 py-1 font-mono rounded-lg bg-cyan-200 dark:bg-cyan-500/80 text-xs break-all">
           JudgeStaking dApp
         </span>
-        <span>© {new Date().getFullYear()} All rights reserved.</span>
+        <span>
+          © {new Date().getFullYear()}
+          {"."} Made With ❤ by Raymond Abiola
+        </span>
       </div>
 
       {address ? (

@@ -221,8 +221,8 @@ export function Stakes() {
 
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-          <div className="bg-gray-900 rounded-2xl w-full max-w-2xl shadow-lg max-h-[90vh] flex flex-col">
-            <div className="flex justify-between items-center p-4 border-b border-gray-700 top-0 bg-gray-900 z-10">
+          <div className="bg-cyan-100 dark:bg-gray-900 rounded-2xl w-full max-w-2xl shadow-lg max-h-[90vh] flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b border-gray-700 top-0 bg-cyan-600 dark:bg-gray-900 z-10">
               <h2 className="text-xl font-bold text-white mb-4">My Stakes</h2>
               <button
                 onClick={() => setIsOpen(false)}
@@ -258,54 +258,58 @@ export function Stakes() {
                 return (
                   <details
                     key={stake.id.toString()}
-                    className="bg-gray-800 rounded-xl p-4 text-sm"
+                    className="bg-cyan-600 dark:bg-gray-800 rounded-xl p-4 text-l"
                   >
-                    <summary className="cursor-pointer text-white font-semibold">
+                    <summary className="cursor-pointer text-yellow-400 dark:text-white font-bold">
                       Stake ID: {stake.id.toString()}
                     </summary>
-                    <div className="mt-3 space-y-2 text-gray-300">
+                    <div className="mt-3 space-y-2 text-white dark:text-gray-300">
                       <p>
-                        <span className="font-semibold">Amount Staked:</span>{" "}
-                        {Math.floor(
-                          Number(formatUnits(stake.amountStaked, decimals)) *
-                            100
-                        ) / 100}{" "}
-                        JUDGE
+                        <span className="font-bold">Amount Staked:</span>{" "}
+                        <span className="text-yellow-400">
+                          {Math.floor(
+                            Number(formatUnits(stake.amountStaked, decimals)) *
+                              100
+                          ) / 100}{" "}
+                          JUDGE
+                        </span>
                       </p>
 
                       <p>
-                        <span className="font-semibold">Pending Rewards:</span>{" "}
-                        {pendingErr[i]
-                          ? "N/A (reverted)"
-                          : pendingByIndex[i] !== undefined
-                          ? `${
-                              Math.floor(
-                                Number(
-                                  formatUnits(
-                                    pendingByIndex[i],
-                                    Number(decimals)
-                                  )
-                                ) * 100
-                              ) / 100
-                            } JUDGE`
-                          : "…"}
+                        <span className="font-bold">Pending Rewards:</span>{" "}
+                        <span className="text-yellow-400">
+                          {pendingErr[i]
+                            ? "N/A (reverted)"
+                            : pendingByIndex[i] !== undefined
+                            ? `${
+                                Math.floor(
+                                  Number(
+                                    formatUnits(
+                                      pendingByIndex[i],
+                                      Number(decimals)
+                                    )
+                                  ) * 100
+                                ) / 100
+                              } JUDGE`
+                            : "…"}
+                        </span>
                       </p>
 
                       <p>
-                        <span className="font-semibold">
-                          Withdrawable From:
-                        </span>{" "}
-                        {getWithdrawDate(
-                          stake.maturityBlockNumber,
-                          blockNumber
-                        )}
+                        <span className="font-bold">Withdrawable From:</span>{" "}
+                        <span className="text-yellow-400">
+                          {getWithdrawDate(
+                            stake.maturityBlockNumber,
+                            blockNumber
+                          )}
+                        </span>
                       </p>
 
                       <div className="flex gap-2 pt-2">
                         {!fadedButton ? (
                           <button
                             onClick={() => handleClaim(i)}
-                            className="px-3 py-2 rounded bg-green-600 text-white"
+                            className="px-3 py-2 rounded bg-green-600 hover:bg-green-500 text-white"
                           >
                             Claim Rewards
                           </button>

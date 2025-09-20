@@ -6,7 +6,7 @@ export function ThemeToggleButton() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative mr-4 w-16 h-8 bg-gray-200 dark:bg-gray-800 border dark:border-white/20 rounded-full flex items-center px-1 transition-colors duration-300"
+      className="relative mr-4 w-16 h-8 bg-gray-200 dark:bg-gray-800 border dark:border-white/20 rounded-full flex items-center px-1 transition-colors duration-300 hover:scale-110"
     >
       <span className="text-yellow-400 text-lg">🌤</span>
 
