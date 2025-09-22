@@ -47,7 +47,7 @@ export function StatsBar() {
   return (
     <div className="w-full bg-cyan-700 dark:bg-gradient-to-r dark:from-gray-950 dark:via-gray-800 dark:to-gray-900 text-white py-6">
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
-        <div>
+        <div className="hover:scale-110">
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Total Supply
           </h3>
@@ -60,7 +60,7 @@ export function StatsBar() {
           </p>
         </div>
 
-        <div>
+        <div className="hover:scale-110">
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Total Staked
           </h3>
@@ -73,7 +73,7 @@ export function StatsBar() {
           </p>
         </div>
 
-        <div>
+        <div className="hover:scale-110">
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Total Stake Weight
           </h3>
@@ -86,7 +86,7 @@ export function StatsBar() {
           </p>
         </div>
 
-        <div>
+        <div className="hover:scale-110">
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Pool APR
           </h3>
@@ -97,7 +97,7 @@ export function StatsBar() {
           </p>
         </div>
 
-        <div>
+        <div className="hover:scale-110">
           <h3 className="text-sm uppercase tracking-wide text-gray-200">
             Total Penalties
           </h3>

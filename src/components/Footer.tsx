@@ -11,7 +11,7 @@ export function Footer() {
         </span>
         <span>
           © {new Date().getFullYear()}
-          {"."} Made With ❤ by Raymond Abiola
+          {"."} Built With ❤ By Raymond Abiola
         </span>
       </div>
 
