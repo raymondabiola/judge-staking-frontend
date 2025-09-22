@@ -106,8 +106,8 @@ export function EarlyWithdrawalForm({
         A 10% penalty applies for early withdrawals
       </p>
 
-      <p className="text-gray-700 dark:text-gray-400">
-        <span className="font-semibold">Balance(Stake {stakeIndex}):</span>{" "}
+      <p className="font-semibold text-gray-700 dark:text-gray-400">
+        <span>Balance(Stake {stakeIndex}):</span>{" "}
         {Number(formatUnits(stake.amountStaked, decimals)).toFixed(2)} JUDGE
       </p>
 
@@ -132,12 +132,12 @@ export function EarlyWithdrawalForm({
           />
           <button
             onClick={() => handleMax()}
-            className="px-4 py-2 bg-cyan-700 text-white rounded-xl hover:bg-cyan-600"
+            className="px-4 py-2 font-semibold bg-cyan-700 text-white rounded-xl hover:bg-cyan-600"
           >
             Max
           </button>
         </div>
-        <p className="text-sm text-gray-800 dark:text-gray-400 mt-1">
+        <p className="font-semibold text-gray-800 dark:text-gray-400 mt-1">
           Wallet Balance:{" "}
           {loadingBalance
             ? "Loading..."
@@ -153,12 +153,12 @@ export function EarlyWithdrawalForm({
       {!fadedButton ? (
         <button
           onClick={() => handleEarlyWithdraw()}
-          className="px-6 py-3 bg-cyan-700 text-white rounded-2xl hover:bg-cyan-600 shadow-md"
+          className="px-6 py-3 font-semibold bg-cyan-700 text-white rounded-2xl hover:bg-cyan-600 shadow-md"
         >
           Early Withdraw
         </button>
       ) : (
-        <button className="px-6 py-3 bg-cyan-700 text-white rounded-2xl shadow-md opacity-50 cursor-not-allowed">
+        <button className="px-6 py-3 font-semibold bg-cyan-700 text-white rounded-2xl shadow-md opacity-50 cursor-not-allowed">
           Early Withdraw
         </button>
       )}

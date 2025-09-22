@@ -374,7 +374,7 @@ export function Stakes() {
 
       {isWithdrawalOpen && selectedStakeIndex !== null && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-          <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-2xl w-full max-w-lg shadow-lg">
+          <div className="bg-cyan-50 dark:bg-gray-900 p-6 rounded-2xl w-full max-w-lg shadow-lg">
             <button
               onClick={() => setIsWithdrawalOpen(false)}
               className="absolute top-4 right-4 text-white hover:text-gray-300"
@@ -392,7 +392,7 @@ export function Stakes() {
 
       {isEarlyWithdrawalOpen && selectedStakeIndex !== null && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-          <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-2xl w-full max-w-lg shadow-lg">
+          <div className="bg-cyan-50 dark:bg-gray-900 p-6 rounded-2xl w-full max-w-lg shadow-lg">
             <button
               onClick={() => setIsEarlyWithdrawalOpen(false)}
               className="absolute top-4 right-4 text-white hover:text-gray-300"
