@@ -56,7 +56,7 @@ export function Dashboard() {
       <div
         className="flex flex-row rounded-2xl shadow-md pt-6 pb-6 px-2 
              bg-cyan-700 dark:bg-gradient-to-l dark:from-gray-950 dark:via-gray-800 dark:to-gray-800
-             text-center divide-x divide-dotted divide-gray-400"
+             text-center divide-x divide-dotted divide-gray-400 text-xs sm:text-sm md:text-lg"
       >
         <div className="flex-1 flex justify-center items-center">
           <h3 className="text-white uppercase">My Wallet Balance</h3>

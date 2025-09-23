@@ -49,16 +49,16 @@ export function DepositLauncher({
                     dark:bg-gradient-to-r dark:from-gray-950 dark:via-gray-800 dark:to-gray-800 
                     rounded-2xl pl-6 pr-6 pb-10 pt-2 shadow-md border border-gray-200 dark:border-white/10"
     >
-      <h2 className="flex justify-center item-center text-center text-2xl font-bold mt-4 mb-2 text-gray-800">
+      <h2 className="flex justify-center item-center text-center text-base sm:text-lg md:text-xl font-bold mt-4 mb-2 text-gray-800">
         {isConnected ? (
           <>
-            Stake and Earn
+            STAKE AND EARN
             <span className="mx-2 text-xl font-bold text-red-400 dark:text-yellow-400">
               {APR != null
                 ? `${Math.round(Number(formatUnits(APR as bigint, 16)))}%`
                 : "…"}
             </span>
-            in JUDGE Rewards
+            IN JUDGE REWARDS
           </>
         ) : (
           "Connect Wallet To Begin Staking"

@@ -26,7 +26,7 @@ function App() {
                   dark:bg-gradient-to-l dark:from-gray-950 dark:via-gray-800 dark:to-gray-800 
                   rounded-2xl p-6 shadow-md border border-gray-200 dark:border-white/10"
               >
-                <h2 className="flex justify-center item-start text-2xl font-bold mb-2 text-gray-800">
+                <h2 className="flex justify-center item-start text-base sm:text-xl md:text-xl font-bold mb-2 text-gray-800">
                   DASHBOARD
                 </h2>
                 <div

@@ -202,8 +202,8 @@ export function Stakes() {
 
   return (
     <>
-      <h2 className="flex justify-center item-center text-center text-2xl font-bold mt-4 mb-2 text-gray-800">
-        Stakes Interaction
+      <h2 className="flex justify-center item-center text-center text-base sm:text-xl md:text-xl font-bold mt-4 mb-2 text-gray-800">
+        STAKES INTERACTION
       </h2>
       <div
         className="flex-1 flex flex-col justify-center items-center rounded-2xl 
