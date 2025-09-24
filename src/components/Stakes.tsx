@@ -213,7 +213,7 @@ export function Stakes() {
         <button
           onClick={() => setIsOpen(true)}
           className="px-4 py-2 bg-cyan-700 hover:bg-cyan-500 text-white rounded-full dark:bg-yellow-500 dark:hover:bg-yellow-400 
-                     text-l"
+                     text-xs sm:text-sm md:text-lg"
         >
           VIEW STAKES
         </button>
