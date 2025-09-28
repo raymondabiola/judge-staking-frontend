@@ -258,7 +258,7 @@ export function Stakes() {
                 return (
                   <details
                     key={stake.id.toString()}
-                    className="bg-cyan-600 dark:bg-gray-800 rounded-xl p-4 text-l"
+                    className="bg-cyan-600 dark:bg-gray-800 rounded-xl p-4 text-xs md:text-base"
                   >
                     <summary className="cursor-pointer text-yellow-400 dark:text-white font-bold">
                       Stake ID: {stake.id.toString()}
@@ -309,14 +309,14 @@ export function Stakes() {
                         {!fadedButton ? (
                           <button
                             onClick={() => handleClaim(i)}
-                            className="px-3 py-2 rounded bg-green-600 hover:bg-green-500 text-white"
+                            className="px-2 py-1 md:px-3 py-2 rounded-lg bg-green-600 hover:scale-110 hover:border hover:bg-transparent text-white text-xs md:text-base"
                           >
                             Claim Rewards
                           </button>
                         ) : (
                           <button
                             disabled
-                            className="px-3 py-2 rounded bg-green-600 text-white disabled:opacity-60 cursor-not-allowed"
+                            className="px-2 py-1 md:px-3 py-2 rounded-lg bg-green-600 text-white text-xs md:text-base disabled:opacity-60 cursor-not-allowed"
                           >
                             Claim Rewards
                           </button>
@@ -328,10 +328,10 @@ export function Stakes() {
                             setIsWithdrawalOpen(true);
                           }}
                           disabled={isDisabled}
-                          className={`px-3 py-2 rounded text-white ${
+                          className={`px-2 py-1 md:px-3 py-2 rounded-lg text-white text-xs md:text-base ${
                             isDisabled
                               ? "bg-blue-600 opacity-60 cursor-not-allowed"
-                              : "bg-blue-600 hover:bg-blue-500"
+                              : "bg-blue-600 hover:scale-110 hover:border hover:bg-transparent"
                           }`}
                         >
                           Withdraw
@@ -343,10 +343,10 @@ export function Stakes() {
                             setIsEarlyWithdrawalOpen(true);
                           }}
                           disabled={isDisabled2}
-                          className={`px-3 py-2 rounded text-white ${
+                          className={`px-2 py-1 md:px-3 py-2 rounded-lg text-white text-xs md:text-base ${
                             isDisabled2
                               ? "bg-amber-600 opacity-60 cursor-not-allowed"
-                              : "bg-amber-600 hover:bg-amber-500"
+                              : "bg-amber-600 hover:scale-110 hover:border hover:bg-transparent"
                           }`}
                         >
                           Early Withdraw
@@ -354,10 +354,10 @@ export function Stakes() {
                         <button
                           onClick={() => handleWithdrawAll(i)}
                           disabled={isDisabled}
-                          className={`px-3 py-2 rounded text-white ${
+                          className={`px-2 py-1 md:px-3 py-2 rounded-lg text-white text-xs md:text-base ${
                             isDisabled
                               ? "bg-purple-600 opacity-60 cursor-not-allowed"
-                              : "bg-purple-600 hover:bg-purple-500"
+                              : "bg-purple-600 hover:scale-110 hover:border hover:bg-transparent"
                           }`}
                         >
                           Withdraw All
