@@ -223,7 +223,9 @@ export function Stakes() {
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
           <div className="bg-cyan-100 dark:bg-gray-900 rounded-2xl w-full max-w-2xl shadow-lg max-h-[90vh] flex flex-col">
             <div className="flex justify-between items-center p-4 border-b border-gray-700 top-0 bg-cyan-600 dark:bg-gray-900 z-10">
-              <h2 className="text-xl font-bold text-white mb-4">My Stakes</h2>
+              <h2 className="text-lg md:text-xl font-bold text-white mb-4">
+                My Stakes
+              </h2>
               <button
                 onClick={() => setIsOpen(false)}
                 className="absolute top-4 right-4 text-white"
@@ -374,7 +376,7 @@ export function Stakes() {
 
       {isWithdrawalOpen && selectedStakeIndex !== null && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-          <div className="bg-cyan-50 dark:bg-gray-900 p-6 rounded-2xl w-full max-w-lg shadow-lg">
+          <div className="bg-cyan-50 dark:bg-gray-900 p-6 rounded-2xl w-90 md:w-full max-w-lg shadow-lg">
             <button
               onClick={() => setIsWithdrawalOpen(false)}
               className="absolute top-4 right-4 text-white hover:text-gray-300"

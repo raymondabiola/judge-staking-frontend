@@ -98,18 +98,20 @@ export function WithdrawalForm({
         </p>
       )}
 
-      <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+      <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
         Withdraw Judge
       </h2>
 
-      <p className="font-semibold text-gray-700 dark:text-gray-400">
-        <span>Stake Balance:</span>{" "}
-        {Number(formatUnits(stake.amountStaked, decimals)).toFixed(2)} JUDGE
+      <p className="text-sm md:text-base font-semibold text-gray-700 dark:text-gray-400">
+        Stake Balance:{" "}
+        <span className="dark:text-yellow-400">
+          {Number(formatUnits(stake.amountStaked, decimals)).toFixed(2)} JUDGE
+        </span>
       </p>
 
       {/* AMOUNT INPUT */}
-      <div className="w-full max-w-md">
-        <label className="block text-gray-800 dark:text-gray-300 mb-2">
+      <div className="w-80 md:w-full max-w-md">
+        <label className="text-sm md:text-base block text-gray-800 dark:text-gray-300 mb-2">
           Amount
         </label>
         <div className="flex items-center gap-2">
@@ -124,32 +126,34 @@ export function WithdrawalForm({
             value={stakeAmountWithdrawn}
             onChange={(e) => setStakeAmountWithdrawn(e.target.value)}
             placeholder="Enter amount"
-            className="w-full p-3 rounded-xl bg-cyan-700 dark:bg-gray-800 text-yellow-400 placeholder-yellow-400 "
+            className="w-60 md:w-full px-4 py-2 rounded-xl bg-cyan-700 dark:bg-gray-800 text-yellow-400 text-sm md:text-base placeholder-yellow-400 "
           />
           <button
             onClick={() => handleMax()}
-            className="px-4 py-2 bg-cyan-700 font-semibold text-white rounded-xl hover:bg-cyan-600"
+            className="px-4 py-2 bg-cyan-700 font-semibold text-white text-sm md:text-base rounded-xl hover:bg-transparent hover:border hover:border-cyan-700 hover:text-cyan-700 dark:hover:border-white dark:hover:text-white"
           >
             Max
           </button>
         </div>
-        <p className="font-semibold text-gray-700 dark:text-gray-400 mt-1">
+        <p className="text-sm md:text-base font-semibold text-gray-700 dark:text-gray-400 mt-1">
           Wallet Balance:{" "}
-          {loadingBalance
-            ? "Loading..."
-            : balance && decimals
-            ? Number(formatUnits(balance as bigint, Number(decimals))).toFixed(
-                2
-              )
-            : "0"}{" "}
-          JUDGE
+          <span className="dark:text-yellow-400">
+            {loadingBalance
+              ? "Loading..."
+              : balance && decimals
+              ? Number(
+                  formatUnits(balance as bigint, Number(decimals))
+                ).toFixed(2)
+              : "0"}{" "}
+            JUDGE
+          </span>
         </p>
       </div>
 
       {!fadedButton ? (
         <button
           onClick={() => handleWithdraw()}
-          className="px-6 py-3 bg-cyan-700 text-white rounded-2xl hover:bg-cyan-600 shadow-md"
+          className="px-4 py-2 bg-cyan-700 text-white text-sm md:text-base rounded-2xl hover:bg-cyan-600 shadow-md hover:bg-transparent hover:border hover:border-cyan-700 hover:text-cyan-700 dark:hover:border-white dark:hover:text-white"
         >
           Withdraw
         </button>
