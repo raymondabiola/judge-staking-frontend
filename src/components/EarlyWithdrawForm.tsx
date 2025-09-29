@@ -98,22 +98,24 @@ export function EarlyWithdrawalForm({
         </p>
       )}
 
-      <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+      <h2 className="text-lg md:text-2xl font-bold text-gray-800 dark:text-white">
         Withdraw Judge Before Stake Matures
       </h2>
 
-      <p className="italic text-red-700 dark:text-red-400">
+      <p className="italic text-sm md:text-base text-red-700 dark:text-red-400">
         A 10% penalty applies for early withdrawals
       </p>
 
-      <p className="font-semibold text-gray-700 dark:text-gray-400">
-        <span>Balance(Stake {stakeIndex}):</span>{" "}
-        {Number(formatUnits(stake.amountStaked, decimals)).toFixed(2)} JUDGE
+      <p className="font-semibold text-sm md:text-base text-gray-700 dark:text-gray-400">
+        Balance (Stake {stakeIndex}):{" "}
+        <span className="dark:text-yellow-400">
+          {Number(formatUnits(stake.amountStaked, decimals)).toFixed(2)} JUDGE
+        </span>
       </p>
 
       {/* AMOUNT INPUT */}
       <div className="w-full max-w-md">
-        <label className="block text-gray-800 dark:text-gray-300 mb-2">
+        <label className="block text-sm md:text-base text-gray-800 dark:text-gray-300 mb-2">
           Amount
         </label>
         <div className="flex items-center gap-2">
@@ -128,16 +130,16 @@ export function EarlyWithdrawalForm({
             value={stakeAmountWithdrawn}
             onChange={(e) => setStakeAmountWithdrawn(e.target.value)}
             placeholder="Enter amount"
-            className="w-full p-3 rounded-xl bg-cyan-700 dark:bg-gray-800 text-yellow-400 placeholder-yellow-400 "
+            className="w-60 md:w-full px-4 py-2 rounded-xl bg-cyan-700 dark:bg-gray-800 text-sm md:text-base text-yellow-400 placeholder-yellow-400 "
           />
           <button
             onClick={() => handleMax()}
-            className="px-4 py-2 font-semibold bg-cyan-700 text-white rounded-xl hover:bg-cyan-600"
+            className="px-4 py-2 font-semibold bg-cyan-700 text-sm md:text-base text-white rounded-xl hover:bg-transparent hover:border hover:border-cyan-700 hover:text-cyan-700 dark:hover:border-white dark:hover:text-white"
           >
             Max
           </button>
         </div>
-        <p className="font-semibold text-gray-800 dark:text-gray-400 mt-1">
+        <p className="font-semibold text-xs md:text-sm text-gray-800 dark:text-gray-400 mt-1">
           Wallet Balance:{" "}
           {loadingBalance
             ? "Loading..."
@@ -153,7 +155,7 @@ export function EarlyWithdrawalForm({
       {!fadedButton ? (
         <button
           onClick={() => handleEarlyWithdraw()}
-          className="px-6 py-3 font-semibold bg-cyan-700 text-white rounded-2xl hover:bg-cyan-600 shadow-md"
+          className="px-4 py-2 font-semibold bg-cyan-700 text-sm md:text-base text-white rounded-2xl hover:bg-transparent hover:border hover:border-cyan-700 hover:text-cyan-700 dark:hover:border-white dark:hover:text-white shadow-md"
         >
           Early Withdraw
         </button>

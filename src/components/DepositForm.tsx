@@ -132,13 +132,13 @@ export function DepositForm() {
           {loadingMessage}
         </p>
       )}
-      <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+      <h2 className="py-1 text-xl md:text-2xl font-bold text-gray-800 dark:text-white">
         Deposit Judge
       </h2>
 
       {/* AMOUNT INPUT */}
       <div className="w-full max-w-md">
-        <label className="block text-gray-800 dark:text-gray-300 mb-2 font-bold">
+        <label className="block text-sm md:text-base text-gray-800 dark:text-gray-300 mb-2 font-bold">
           Amount
         </label>
         <div className="flex items-center gap-2">
@@ -148,16 +148,16 @@ export function DepositForm() {
             value={stakeAmount}
             onChange={(e) => setStakeAmount(e.target.value)}
             placeholder="Enter amount"
-            className="w-full p-3 rounded-xl bg-cyan-700 dark:bg-gray-800 text-yellow-400 font-semibold placeholder-yellow-400 "
+            className="w-60 md:w-full px-4 py-2 rounded-xl bg-cyan-700 dark:bg-gray-800 text-sm md:text-base text-yellow-400 font-semibold placeholder-yellow-400 "
           />
           <button
             onClick={handleMax}
-            className="px-4 py-2 bg-cyan-700 text-white font-semibold rounded-xl hover:bg-cyan-600"
+            className="px-4 py-2 bg-cyan-700 text-sm md:text-base text-white font-semibold rounded-xl hover:bg-transparent hover:border hover:border-cyan-700 hover:text-cyan-700 dark:hover:border-white dark:hover:text-white"
           >
             Max
           </button>
         </div>
-        <p className="text-sm text-gray-800 dark:text-gray-400 mt-1">
+        <p className="text-xs md:text-sm text-gray-800 dark:text-gray-400 mt-1">
           Balance:{" "}
           {loadingBalance
             ? "Loading..."
@@ -172,7 +172,7 @@ export function DepositForm() {
 
       {/* LOCKUP INPUT */}
       <div className="w-full max-w-md">
-        <label className="block font-bold text-gray-800 dark:text-gray-300 mb-2">
+        <label className="block font-bold text-sm md:text-base text-gray-800 dark:text-gray-300 mb-2">
           Lockup Period (days)
         </label>
         <input
@@ -181,7 +181,7 @@ export function DepositForm() {
           max="360"
           value={lockUpPeriod}
           onChange={(e) => setLockUpPeriod(Number(e.target.value))}
-          className="w-full p-3 rounded-xl bg-cyan-700 dark:bg-gray-800 text-yellow-400 font-semibold mb-3"
+          className="w-full px-4 py-2 rounded-xl bg-cyan-700 dark:bg-gray-800 text-sm md:text-base text-yellow-400 font-semibold mb-3"
         />
         <input
           type="range"
@@ -191,13 +191,13 @@ export function DepositForm() {
           onChange={(e) => setLockUpPeriod(Number(e.target.value))}
           className="w-full accent-cyan-500"
         />
-        <p className="text-sm text-gray-800 dark:text-gray-400 mt-1">
+        <p className="text-xs md:text-sm text-gray-800 dark:text-gray-400 mt-1">
           {lockUpPeriod} days
         </p>
       </div>
 
       {/* STAKE WEIGHT */}
-      <div className="flex flex-row gap-2 w-full max-w-md font-semibold text-gray-800 dark:text-yellow-400">
+      <div className="flex flex-row gap-2 w-full max-w-md font-semibold text-sm md:text-base text-gray-800 dark:text-yellow-400">
         <label className="block text-gray-800 dark:text-gray-300 mb-2">
           Stake Weight:
         </label>
@@ -209,7 +209,7 @@ export function DepositForm() {
         (!fadedButton ? (
           <button
             onClick={handleApprove}
-            className="px-6 py-3 bg-cyan-700 font-semibold text-white rounded-2xl hover:bg-cyan-600 shadow-md"
+            className="px-4 py-2 bg-cyan-700 font-semibold text-sm md:text-base text-white rounded-2xl hover:bg-transparent hover:border hover:border-cyan-700 hover:text-cyan-700 dark:hover:border-white dark:hover:text-white shadow-md"
           >
             Approve
           </button>
@@ -226,12 +226,12 @@ export function DepositForm() {
         (!fadedButton ? (
           <button
             onClick={handleDeposit}
-            className="px-6 py-3 font-semibold bg-cyan-700 text-white rounded-2xl hover:bg-cyan-600 shadow-md"
+            className="px-4 py-2 font-semibold bg-cyan-700 text-sm md:text-base text-white rounded-2xl hover:bg-transparent hover:border hover:border-cyan-700 hover:text-cyan-700 dark:hover:border-white dark:hover:text-white shadow-md"
           >
             Deposit
           </button>
         ) : (
-          <button className="px-6 py-3 font-semibold bg-cyan-700 text-white rounded-2xl shadow-md opacity-50 cursor-not-allowed">
+          <button className="px-4 py-2 font-semibold bg-cyan-700 text-white rounded-2xl shadow-md opacity-50 cursor-not-allowed">
             Deposit
           </button>
         ))}

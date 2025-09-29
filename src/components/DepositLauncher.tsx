@@ -71,9 +71,9 @@ export function DepositLauncher({
       >
         <button
           className="rounded-full px-4 py-2 rounded-2xl bg-cyan-700 
-                     hover:bg-cyan-500 
+                     hover:bg-transparent hover:border hover:border-cyan-700 hover:text-cyan-700 hover:scale-110
                      dark:bg-yellow-500 dark:hover:bg-yellow-400 
-                     text-white text-xs sm:text-sm md:text-lg"
+                     text-white dark:hover:text-white dark:hover:border-none text-xs sm:text-sm md:text-lg"
           onClick={() => {
             if (!isConnected) {
               openConnectModal?.();

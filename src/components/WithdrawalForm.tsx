@@ -135,18 +135,16 @@ export function WithdrawalForm({
             Max
           </button>
         </div>
-        <p className="text-sm md:text-base font-semibold text-gray-700 dark:text-gray-400 mt-1">
+        <p className="text-xs md:text-sm text-gray-800 dark:text-gray-400 mt-1">
           Wallet Balance:{" "}
-          <span className="dark:text-yellow-400">
-            {loadingBalance
-              ? "Loading..."
-              : balance && decimals
-              ? Number(
-                  formatUnits(balance as bigint, Number(decimals))
-                ).toFixed(2)
-              : "0"}{" "}
-            JUDGE
-          </span>
+          {loadingBalance
+            ? "Loading..."
+            : balance && decimals
+            ? Number(formatUnits(balance as bigint, Number(decimals))).toFixed(
+                2
+              )
+            : "0"}{" "}
+          JUDGE
         </p>
       </div>
 

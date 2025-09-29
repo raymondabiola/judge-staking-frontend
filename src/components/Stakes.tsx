@@ -212,7 +212,7 @@ export function Stakes() {
       >
         <button
           onClick={() => setIsOpen(true)}
-          className="px-4 py-2 bg-cyan-700 hover:bg-cyan-500 text-white rounded-full dark:bg-yellow-500 dark:hover:bg-yellow-400 
+          className="px-4 py-2 bg-cyan-700 hover:bg-transparent hover:border hover:border-cyan-700 hover:text-cyan-700 hover:scale-110 text-white rounded-full dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:hover:border-none dark:hover:text-white 
                      text-xs sm:text-sm md:text-lg"
         >
           VIEW STAKES
@@ -394,7 +394,7 @@ export function Stakes() {
 
       {isEarlyWithdrawalOpen && selectedStakeIndex !== null && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-          <div className="bg-cyan-50 dark:bg-gray-900 p-6 rounded-2xl w-full max-w-lg shadow-lg">
+          <div className="bg-cyan-50 dark:bg-gray-900 p-6 rounded-2xl w-90 md:w-full max-w-lg shadow-lg">
             <button
               onClick={() => setIsEarlyWithdrawalOpen(false)}
               className="absolute top-4 right-4 text-white hover:text-gray-300"
