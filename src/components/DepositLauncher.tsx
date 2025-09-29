@@ -52,8 +52,8 @@ export function DepositLauncher({
       <h2 className="flex justify-center item-center text-center text-base sm:text-lg md:text-xl font-bold mt-4 mb-2 text-gray-800">
         {isConnected ? (
           <>
-            STAKE AND EARN
-            <span className="mx-2 text-xl font-bold text-red-400 dark:text-yellow-400">
+            EARN
+            <span className="mx-2 sm:text-lg md:text-xl font-bold text-red-400 dark:text-yellow-400 hover:scale-110">
               {APR != null
                 ? `${Math.round(Number(formatUnits(APR as bigint, 16)))}%`
                 : "…"}

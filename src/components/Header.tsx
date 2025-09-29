@@ -7,7 +7,7 @@ export function Header() {
       <h1 className="text-base sm:text-2xl md:text-3xl font-bold ml-5">
         ⚖️ JUDGESTAKING
       </h1>
-      <div className="flex justify-between items-center p-3">
+      <div className="flex justify-between items-center p-3 text-xs md:text-base">
         <ThemeToggleButton />
         <ConnectButton />
       </div>
